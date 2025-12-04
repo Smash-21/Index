@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Esper Level Survey – A Certain Magical Index</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<style>
+    body {
+        font-family: Arial, sans-serif;
+        background: #0a0a0a;
+        color: #eee;
+        margin: 0;
+        padding: 20px;
+    }
+    .container {
+        max-width: 800px;
+        margin: auto;
+        background: #111;
+        padding: 25px;
+        border-radius: 12px;
+        border: 1px solid #333;
+    }
+    h1, h2 {
+        text-align: center;
+        color: #6cf;
+    }
+    .question {
+        margin-bottom: 25px;
+    }
+    label {
+        display: block;
+        padding: 6px 0;
+        cursor: pointer;
+    }
+    button {
+        width: 100%;
+        padding: 15px;
+        background: #6cf;
+        border: none;
+        border-radius: 12px;
+        font-size: 18px;
+        font-weight: bold;
+        cursor: pointer;
+        margin-top: 10px;
+    }
+    button:hover {
+        background: #57a7c9;
+    }
+    .result {
+        margin-top: 35px;
+        padding: 25px;
+        background: #111;
+        border: 1px solid #444;
+        border-radius: 12px;
+        display: none;
+    }
+</style>
+</head>
+<body>
+
+<div class="container">
+    <h1>Esper Power Survey</h1>
+    <h2>Based on the Railgun / Index System</h2>
+
+    <form id="surveyForm"></form>
+
+    <button onclick="calculateResult()">Get Your Esper Result</button>
+
+    <div class="result" id="resultBox">
+        <h2>Your Esper Classification</h2>
+        <p id="resultText"></p>
+    </div>
+</div>
+
+<script>
+/* ---------------------------------------
+   QUESTIONS  
+--------------------------------------- */
+const questions = [
+    ["How strong is your imagination?", ["Weak","Average","Strong","Extremely vivid"]],
+    ["How well can you focus?", ["Easily distracted","Can focus","Strong focus","Laser focus"]],
+    ["How emotionally stable are you?", ["Very unstable","Sometimes unstable","Balanced","Highly stable"]],
+    ["Do you believe powers could exist scientifically?", ["No","Maybe","Yes","Absolutely"]],
+    ["Which ability feels most natural?", ["Environment/Energy","Mind/Emotion","Self-enhancement","Space/Dimensional"]],
+    ["Are you more logical or emotional?", ["Logical","Balanced","Emotional"]],
+    ["Do you prefer flashy or subtle abilities?", ["Flashy","Balanced","Subtle"]],
+    ["Can you stay calm during chaos?", ["No","Usually","Yes","Absolutely"]],
+    ["How disciplined are you?", ["Give up fast","Sometimes disciplined","Practice regularly","Push extremely hard"]],
+    ["Can you visualize for 10+ seconds?", ["No","Maybe","Yes","Easily"]],
+    ["Do people describe you as different?", ["No","Sometimes","Yes","Always"]],
+    ["Do you see the world in your own way?", ["No","Slightly","Yes","Strongly"]],
+    ["Are you creative?", ["No","A bit","Yes","Very creative"]],
+    ["Do you struggle with self-doubt?", ["A lot","Sometimes","Rarely","Never"]],
+    ["Do you fear losing control of yourself?", ["Yes","Sometimes","No","I embrace risks"]]
+];
+
+/* Render Questions */
+const form = document.getElementById("surveyForm");
+questions.forEach((q, index) => {
+    let block = document.createElement("div");
+    block.className = "question";
+    block.innerHTML = `<h3>${index+1}. ${q[0]}</h3>`;
+    q[1].forEach((choice, i) => {
+        block.innerHTML += `
+            <label>
+                <input type="radio" name="q${index}" value="${i}">
+                ${choice}
+            </label>
+        `;
+    });
+    form.appendChild(block);
+});
+
+/* ---------------------------------------
+   RESULT CALCULATION  
+--------------------------------------- */
+function calculateResult() {
+    let answers = [];
+    for (let i=0; i<questions.length; i++) {
+        let val = document.querySelector(`input[name="q${i}"]:checked`);
+        if (!val) {
+            alert("Please answer all questions!");
+            return;
+        }
+        answers.push(parseInt(val.value));
+    }
+
+    /* -------------------------
+       ESPER LEVEL CALCULATION
+    ------------------------- */
+    let imagination     = answers[0];
+    let focus           = answers[1];
+    let stability       = answers[2];
+    let belief          = answers[3];
+    let discipline      = answers[8];
+    let visualization   = answers[9];
+    let uniqueness      = answers[10] + answers[11];
+
+    let levelScore =
+        imagination + focus + stability + belief +
+        discipline + visualization + uniqueness/2;
+
+    let esperLevel = 0;
+    if (levelScore < 10) esperLevel = 0;
+    else if (levelScore < 14) esperLevel = 1;
+    else if (levelScore < 18) esperLevel = 2;
+    else if (levelScore < 22) esperLevel = 3;
+    else if (levelScore < 28) esperLevel = 4;
+    else esperLevel = 5;
+
+    /* -------------------------
+       ESPER TYPE CALCULATION
+    ------------------------- */
+    let typeChoice = answers[4];
+    let type = "";
+    if (typeChoice === 0) type = "Environment/Energy Manipulator";
+    if (typeChoice === 1) type = "Mental / Emotion Controller";
+    if (typeChoice === 2) type = "Self-Enhancement / Physical Booster";
+    if (typeChoice === 3) type = "Space / Dimensional Manipulator";
+
+    /* -------------------------
+       RANKING WITHIN LEVEL
+    ------------------------- */
+    let rank = "Standard";
+    if (esperLevel === 4 || esperLevel === 5) {
+        if (focus === 3 && discipline >= 2) rank = "High Tier";
+        else rank = "Mid Tier";
+    }
+
+    /* -------------------------
+       OUTPUT 
+    ------------------------- */
+    const resultBox = document.getElementById("resultBox");
+    const resultText = document.getElementById("resultText");
+
+    resultText.innerHTML = `
+        <strong>Esper Level:</strong> Level ${esperLevel}<br><br>
+        <strong>Esper Type:</strong> ${type}<br><br>
+        <strong>Rank:</strong> ${rank}<br><br>
+        <strong>Analysis:</strong><br>
+        Your Personal Reality strength, focus stability, creativity, and AIM field projection 
+        determine that you possess the qualities of a ${type}. Based on your combined cognitive 
+        metrics and emotional stability, you fall under <strong>Level ${esperLevel}</strong> with a 
+        <strong>${rank}</strong> rating.
+    `;
+
+    resultBox.style.display = "block";
+    resultBox.scrollIntoView({ behavior: "smooth" });
+}
+</script>
+
+</body>
+</html>
