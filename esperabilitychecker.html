@@ -1,0 +1,533 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Index / Railgun — Esper Survey</title>
+  <style>
+    :root{
+      --bg:#0f1724; --card:#0b1220; --accent:#6ee7b7; --muted:#9aa6b2; --glass:rgba(255,255,255,0.03);
+    }
+    *{box-sizing:border-box;font-family:Inter, ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial}
+    html,body{height:100%;margin:0;background:
+      radial-gradient(1200px 600px at 10% 10%, rgba(46,52,64,0.12), transparent),
+      radial-gradient(900px 400px at 90% 80%, rgba(62,45,95,0.08), transparent),
+      var(--bg); color:#e6eef6;}
+    .wrap{max-width:940px;margin:36px auto;padding:20px;}
+    header{display:flex;gap:16px;align-items:center;margin-bottom:18px;}
+    header h1{font-size:20px;margin:0}
+    header p{margin:0;color:var(--muted);font-size:13px}
+    .card{background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));border-radius:12px;padding:18px;box-shadow:0 6px 30px rgba(3,6,12,0.6);border:1px solid rgba(255,255,255,0.03)}
+    .q{margin-bottom:14px;padding:12px;border-radius:8px;background:var(--glass);display:block}
+    .q h3{margin:0 0 10px 0;font-size:15px}
+    .options{display:flex;flex-wrap:wrap;gap:10px}
+    .opt{background:transparent;border:1px solid rgba(255,255,255,0.06);padding:8px 10px;border-radius:8px;color:var(--muted);cursor:pointer;user-select:none}
+    .opt input{display:none}
+    .opt.selected{border-color:var(--accent);color:var(--accent);box-shadow:0 6px 20px rgba(110,231,183,0.06)}
+    .row{display:flex;gap:12px;flex-wrap:wrap}
+    button{background:var(--accent);border:0;padding:10px 14px;border-radius:10px;color:#032217;font-weight:600;cursor:pointer}
+    .result{margin-top:18px;padding:16px;border-radius:10px;background:linear-gradient(180deg, rgba(14,18,22,0.6), rgba(10,12,16,0.4));border:1px solid rgba(255,255,255,0.03)}
+    pre{white-space:pre-wrap;color:var(--muted);font-size:13px}
+    .small{font-size:13px;color:var(--muted)}
+    label.checkbox{display:inline-flex;align-items:center;gap:8px;padding:8px 10px;background:transparent;border-radius:8px;border:1px dashed rgba(255,255,255,0.03);color:var(--muted);cursor:pointer}
+    .flex-between{display:flex;justify-content:space-between;align-items:center;gap:12px}
+    footer{margin-top:18px;color:var(--muted);font-size:13px}
+    /* responsive */
+    @media (max-width:700px){
+      .wrap{padding:12px}
+      header h1{font-size:17px}
+    }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <header>
+      <div>
+        <h1>Index / Railgun — "What Esper Level Would YOU Be?"</h1>
+        <p class="small">Fill the quick survey — results shown instantly. Share the page link with friends.</p>
+      </div>
+    </header>
+
+    <div class="card" id="surveyCard">
+      <form id="surveyForm">
+        <!-- We'll render 15 questions. Each option stores a numeric value used by the scorer. -->
+        <!-- Q1 -->
+        <div class="q" data-q="1">
+          <h3>1. How strong is your imagination?</h3>
+          <div class="options">
+            <label class="opt"><input type="radio" name="q1" value="0"> Weak</label>
+            <label class="opt"><input type="radio" name="q1" value="1"> Average</label>
+            <label class="opt"><input type="radio" name="q1" value="2"> Strong</label>
+            <label class="opt"><input type="radio" name="q1" value="3"> Extremely vivid / reality-blurring</label>
+          </div>
+        </div>
+
+        <!-- Q2 -->
+        <div class="q" data-q="2">
+          <h3>2. How well can you focus on ONE task?</h3>
+          <div class="options">
+            <label class="opt"><input type="radio" name="q2" value="0"> I get distracted easily</label>
+            <label class="opt"><input type="radio" name="q2" value="1"> I can focus if needed</label>
+            <label class="opt"><input type="radio" name="q2" value="2"> Strong focus</label>
+            <label class="opt"><input type="radio" name="q2" value="3"> Laser-focus (hyper concentration)</label>
+          </div>
+        </div>
+
+        <!-- Q3 -->
+        <div class="q" data-q="3">
+          <h3>3. How emotionally stable are you?</h3>
+          <div class="options">
+            <label class="opt"><input type="radio" name="q3" value="0"> Very unstable</label>
+            <label class="opt"><input type="radio" name="q3" value="1"> Sometimes unstable</label>
+            <label class="opt"><input type="radio" name="q3" value="2"> Balanced</label>
+            <label class="opt"><input type="radio" name="q3" value="3"> Highly stable / calm under pressure</label>
+          </div>
+        </div>
+
+        <!-- Q4 -->
+        <div class="q" data-q="4">
+          <h3>4. How much do you believe “powers” could exist if science advanced enough?</h3>
+          <div class="options">
+            <label class="opt"><input type="radio" name="q4" value="0"> Not at all</label>
+            <label class="opt"><input type="radio" name="q4" value="1"> Maybe</label>
+            <label class="opt"><input type="radio" name="q4" value="2"> Yes</label>
+            <label class="opt"><input type="radio" name="q4" value="3"> Absolutely / I already imagine them</label>
+          </div>
+        </div>
+
+        <!-- Q5 (ability affinity) allow multiple -->
+        <div class="q" data-q="5">
+          <h3>5. Which one feels most natural to you? (choose any)</h3>
+          <div class="options">
+            <label class="checkbox"><input type="checkbox" name="q5[]" value="A"> A) Change environment / energy / elements (electricity, beams)</label>
+            <label class="checkbox"><input type="checkbox" name="q5[]" value="B"> B) Manipulate minds, memory, emotions</label>
+            <label class="checkbox"><input type="checkbox" name="q5[]" value="C"> C) Change yourself (speed, physical buffs)</label>
+            <label class="checkbox"><input type="checkbox" name="q5[]" value="D"> D) Change space (teleportation, distortion)</label>
+            <label class="checkbox"><input type="checkbox" name="q5[]" value="E"> E) Abstract / unique (probability, info, illusions)</label>
+          </div>
+        </div>
+
+        <!-- Q6 -->
+        <div class="q" data-q="6">
+          <h3>6. Are you more logical or emotional?</h3>
+          <div class="options">
+            <label class="opt"><input type="radio" name="q6" value="2"> Mostly logical</label>
+            <label class="opt"><input type="radio" name="q6" value="1"> Balanced</label>
+            <label class="opt"><input type="radio" name="q6" value="0"> Mostly emotional</label>
+          </div>
+        </div>
+
+        <!-- Q7 -->
+        <div class="q" data-q="7">
+          <h3>7. Do you prefer flashiness or subtle ability?</h3>
+          <div class="options">
+            <label class="opt"><input type="radio" name="q7" value="2"> Flashy (fights)</label>
+            <label class="opt"><input type="radio" name="q7" value="1"> Balanced</label>
+            <label class="opt"><input type="radio" name="q7" value="0"> Subtle / strategic</label>
+            <label class="opt"><input type="radio" name="q7" value="1"> Any / depends</label>
+          </div>
+        </div>
+
+        <!-- Q8 -->
+        <div class="q" data-q="8">
+          <h3>8. Can you stay calm during chaos?</h3>
+          <div class="options">
+            <label class="opt"><input type="radio" name="q8" value="0"> No</label>
+            <label class="opt"><input type="radio" name="q8" value="1"> Usually</label>
+            <label class="opt"><input type="radio" name="q8" value="2"> Yes</label>
+            <label class="opt"><input type="radio" name="q8" value="3"> Absolutely — I become sharper</label>
+          </div>
+        </div>
+
+        <!-- Q9 -->
+        <div class="q" data-q="9">
+          <h3>9. How disciplined are you with practice?</h3>
+          <div class="options">
+            <label class="opt"><input type="radio" name="q9" value="0"> I give up fast</label>
+            <label class="opt"><input type="radio" name="q9" value="1"> I can practice if motivated</label>
+            <label class="opt"><input type="radio" name="q9" value="2"> I practice regularly</label>
+            <label class="opt"><input type="radio" name="q9" value="3"> I push myself like a Level 5 candidate</label>
+          </div>
+        </div>
+
+        <!-- Q10 -->
+        <div class="q" data-q="10">
+          <h3>10. Can you maintain a strong visual image in your mind for 10+ seconds?</h3>
+          <div class="options">
+            <label class="opt"><input type="radio" name="q10" value="0"> No</label>
+            <label class="opt"><input type="radio" name="q10" value="1"> Maybe</label>
+            <label class="opt"><input type="radio" name="q10" value="2"> Yes</label>
+            <label class="opt"><input type="radio" name="q10" value="3"> Very easily</label>
+          </div>
+        </div>
+
+        <!-- Q11 -->
+        <div class="q" data-q="11">
+          <h3>11. Do people describe you as “different”?</h3>
+          <div class="options">
+            <label class="opt"><input type="radio" name="q11" value="0"> No</label>
+            <label class="opt"><input type="radio" name="q11" value="1"> Sometimes</label>
+            <label class="opt"><input type="radio" name="q11" value="2"> Yes</label>
+            <label class="opt"><input type="radio" name="q11" value="3"> All the time</label>
+          </div>
+        </div>
+
+        <!-- Q12 -->
+        <div class="q" data-q="12">
+          <h3>12. Do you feel you “see the world in your own way”?</h3>
+          <div class="options">
+            <label class="opt"><input type="radio" name="q12" value="0"> No</label>
+            <label class="opt"><input type="radio" name="q12" value="1"> Slightly</label>
+            <label class="opt"><input type="radio" name="q12" value="2"> Yes</label>
+            <label class="opt"><input type="radio" name="q12" value="3"> Strongly — others don’t see what I see</label>
+          </div>
+        </div>
+
+        <!-- Q13 -->
+        <div class="q" data-q="13">
+          <h3>13. Are you creative in solutions or ideas?</h3>
+          <div class="options">
+            <label class="opt"><input type="radio" name="q13" value="0"> No</label>
+            <label class="opt"><input type="radio" name="q13" value="1"> A bit</label>
+            <label class="opt"><input type="radio" name="q13" value="2"> Yes</label>
+            <label class="opt"><input type="radio" name="q13" value="3"> Overly creative / original</label>
+          </div>
+        </div>
+
+        <!-- Q14 -->
+        <div class="q" data-q="14">
+          <h3>14. Do you struggle with self-doubt?</h3>
+          <div class="options">
+            <label class="opt"><input type="radio" name="q14" value="0"> A lot</label>
+            <label class="opt"><input type="radio" name="q14" value="1"> Sometimes</label>
+            <label class="opt"><input type="radio" name="q14" value="2"> Rarely</label>
+            <label class="opt"><input type="radio" name="q14" value="3"> Almost never</label>
+          </div>
+        </div>
+
+        <!-- Q15 -->
+        <div class="q" data-q="15">
+          <h3>15. Do you fear losing control of yourself?</h3>
+          <div class="options">
+            <label class="opt"><input type="radio" name="q15" value="0"> Yes</label>
+            <label class="opt"><input type="radio" name="q15" value="1"> Sometimes</label>
+            <label class="opt"><input type="radio" name="q15" value="2"> No</label>
+            <label class="opt"><input type="radio" name="q15" value="3"> I embrace risks</label>
+          </div>
+        </div>
+
+        <div class="flex-between" style="margin-top:10px;">
+          <div class="small">Tip: choose honestly — the scoring maps to Index-style AIM & personal reality traits.</div>
+          <div>
+            <button id="calcBtn" type="button">Calculate Result</button>
+            <button id="resetBtn" type="button" style="margin-left:8px;background:#1f2937;color:var(--accent)">Reset</button>
+          </div>
+        </div>
+
+      </form>
+
+      <div id="result" class="result" style="display:none;"></div>
+    </div>
+
+    <footer>
+      <div class="small">Built for fun — inspired by "A Certain Magical Index / Railgun". Results are fictional. Share the file or host it on any static page.</div>
+    </footer>
+  </div>
+
+<script>
+  // UI niceties: toggle selected classes
+  document.querySelectorAll('.options').forEach(container=>{
+    container.addEventListener('click',(e)=>{
+      const opt = e.target.closest('label.opt, label.checkbox');
+      if(!opt) return;
+      const radio = opt.querySelector('input[type="radio"]');
+      const checkbox = opt.querySelector('input[type="checkbox"]');
+
+      if(radio){
+        // deselect sibling labels for the same radio group
+        const name = radio.name;
+        document.querySelectorAll('input[name="'+name+'"]').forEach(inp=>{
+          inp.closest('label.opt') && inp.closest('label.opt').classList.remove('selected');
+        });
+        radio.checked = true;
+        opt.classList.add('selected');
+      } else if(checkbox){
+        checkbox.checked = !checkbox.checked;
+        opt.classList.toggle('selected', checkbox.checked);
+      }
+    });
+  });
+
+  // allow keyboard selection: not necessary but ok
+  document.getElementById('resetBtn').addEventListener('click',()=>{
+    document.getElementById('surveyForm').reset();
+    document.querySelectorAll('.opt, .checkbox').forEach(el=>el.classList.remove('selected'));
+    document.getElementById('result').style.display='none';
+  });
+
+  document.getElementById('calcBtn').addEventListener('click', calculate);
+
+  function calculate(){
+    const form = new FormData(document.getElementById('surveyForm'));
+
+    // read numeric answers (integer values)
+    function getNum(q){ const v = form.get('q'+q); return v===null ? null : parseInt(v,10); }
+
+    const answers = {};
+    for(let i=1;i<=15;i++){ answers['q'+i] = getNum(i); }
+
+    // Q5 multi-checkbox categories
+    const q5 = form.getAll('q5[]'); // array of strings like ["A","D"]
+    // Basic validation
+    for(let i=1;i<=15;i++){
+      if(i!==5 && answers['q'+i] === null){
+        alert('Please answer question ' + i + ' before calculating.');
+        return;
+      }
+    }
+    if(q5.length === 0){
+      if(!confirm('You did not select any option for Q5. Continue assuming no affinity?')) return;
+    }
+
+    // Scoring: sum selected numeric values (max = 42)
+    // Map null to 0 for safety (already validated)
+    let numericSum = 0;
+    const scoreKeys = [1,2,3,4,6,7,8,9,10,11,12,13,14,15]; // include these numeric scoring questions
+    scoreKeys.forEach(k => { numericSum += (answers['q'+k] || 0); });
+
+    const maxPossible = scoreKeys.length * 3; // 14 * 3 = 42
+    const percent = Math.round( (numericSum / maxPossible) * 100 );
+
+    // Determine Level according to percent and discipline (q9)
+    let level;
+    if(percent < 20) level = 0;
+    else if(percent < 40) level = 1;
+    else if(percent < 55) level = 2;
+    else if(percent < 70) level = 3;
+    else if(percent < 85) level = 4;
+    else level = 5;
+
+    // Level-5 requires discipline (q9) >= 3; otherwise fall back to 4
+    if(level === 5 && answers.q9 < 3){
+      level = 4;
+    }
+
+    // Determine category label (handles hybrids)
+    const categories = Array.from(new Set(q5)); // unique
+    let categoryLabel = 'Unknown';
+    let abilityName = '';
+    let shortDesc = '';
+
+    function setAbility(name, desc){
+      abilityName = name; shortDesc = desc;
+    }
+
+    if(categories.length === 0){
+      categoryLabel = 'Undetermined';
+      setAbility('Latent Personal Reality', 'No strong affinity chosen — potential varies with environment and training.');
+    } else if(categories.length === 1){
+      const c = categories[0];
+      switch(c){
+        case 'A': categoryLabel='Environment / Energy'; setAbility('Electromaster-like', 'Manipulate electric/energy fields; direct, versatile offensive and defensive power.'); break;
+        case 'B': categoryLabel='Mind / Emotion'; setAbility('Psychic Weaver', 'Mind and emotion manipulation — subtle influence, strategic strength.'); break;
+        case 'C': categoryLabel='Self / Physical'; setAbility('Self-Augmenter', 'Boosts to body: speed, strength, regeneration.'); break;
+        case 'D': categoryLabel='Space / Distortion'; setAbility('Spatial Distorter', 'Control of space: distortions, short-range warps and pressure fields.'); break;
+        case 'E': categoryLabel='Abstract / Unique'; setAbility('Probability / Info Shaper', 'Unusual powers like probability manipulation, illusion, or information bending.'); break;
+      }
+    } else {
+      // hybrids: check common pairs priority A+D => Spatial-Electrodynamic (your case)
+      const s = categories.join('+');
+      if(s.includes('A') && s.includes('D')){
+        categoryLabel = 'Energy + Space (Hybrid)';
+        setAbility('Dimensional Induction Field', 'Blend of electric/energy control and space distortion: shape energy inside space, compress/expand fields.');
+      } else if(s.includes('A') && s.includes('C')){
+        categoryLabel = 'Energy + Self (Hybrid)';
+        setAbility('Electro-Physical Manipulator', 'Combine electrokinesis with self-augmentation — powerful close-range fighter & controller.');
+      } else if(s.includes('B') && s.includes('E')){
+        categoryLabel = 'Mind + Abstract (Hybrid)';
+        setAbility('Cognitive Probability Weaver', 'Mind-influencing power mixing with probability/illusion — highly strategic and unpredictable.');
+      } else {
+        // generic hybrid label
+        categoryLabel = 'Hybrid: ' + categories.join(' & ');
+        setAbility('Hybrid Esper', 'A mixed ability — characteristics depend on the specific components you selected.');
+      }
+    }
+
+    // Level specifics: descriptive text, ranking for level 4
+    let levelDesc = '';
+    let rankText = '';
+    if(level === 0){
+      levelDesc = 'Level 0 — No detectable Esper traits. You may still have latent potential but not active personal reality strengths.';
+    } else if(level === 1){
+      levelDesc = 'Level 1 — Minor personal reality effects. Useful in niche situations; weak in direct confrontation.';
+    } else if(level === 2){
+      levelDesc = 'Level 2 — Usable ability; can affect a single aspect reliably under focus.';
+    } else if(level === 3){
+      levelDesc = 'Level 3 — Solid Esper power. Noticeable effect in combat/support roles; requires training for consistency.';
+    } else if(level === 4){
+      levelDesc = 'Level 4 — High-tier Esper. Rare, versatile, and formidable. You are among the stronger espers.';
+      // Rank inside Level 4
+      // Map percent into ranking tier
+      if(percent < 75) rankText = 'Level 4 — Mid-tier (roughly top ~40% of Level 4s).';
+      else if(percent < 82) rankText = 'Level 4 — Upper-mid (top ~25% of Level 4s).';
+      else if(percent < 90) rankText = 'Level 4 — Upper-tier (top ~15% of Level 4s).';
+      else rankText = 'Level 4 — Elite-tier (top ~5–8% of Level 4s).';
+    } else if(level === 5){
+      levelDesc = 'Level 5 — World-class, near-unlimited personal reality strength. Very few reach this. Discipline requirement met.';
+      rankText = 'Level 5 candidate — only a handful have this level.';
+    }
+
+    // Special nickname logic: generate from category
+    const nickname = (() => {
+      const base = abilityName.split(' ')[0] || 'Esper';
+      if(categoryLabel.includes('Energy') && categoryLabel.includes('Space')) return 'The Spatial Inductor';
+      if(categoryLabel.includes('Energy')) return 'The Electromancer';
+      if(categoryLabel.includes('Mind')) return 'The Mindwright';
+      if(categoryLabel.includes('Self')) return 'The Augment';
+      if(categoryLabel.includes('Space')) return 'The Dimension Bender';
+      if(categoryLabel.includes('Abstract')) return 'The Probabilist';
+      return 'The ' + base;
+    })();
+
+    // Strengths / Weaknesses heuristics
+    const strengths = [];
+    const weaknesses = [];
+    // Strengths: if high control, visualization, low self-doubt, good focus
+    if(answers.q8 >= 2) strengths.push('Calm under pressure — precision control.');
+    if(answers.q10 >= 2) strengths.push('Strong visualization — reliable technique shaping.');
+    if(answers.q6 === 2) strengths.push('Logical thinking — tactical application.');
+    if(answers.q13 >= 2) strengths.push('High creativity — flexible uses.');
+
+    // Weaknesses: high self-doubt or low discipline
+    if(answers.q14 <= 1) weaknesses.push('Some self-doubt can reduce consistency.');
+    if(answers.q9 <= 1) weaknesses.push('Low training discipline — hard to reach peak potential.');
+    if(answers.q15 <= 1) weaknesses.push('Fear of losing control — may limit risky techniques.');
+
+    // Potential level-5 evolution description
+    let lvl5Evolution = '';
+    if(level >= 4){
+      lvl5Evolution = 'If you trained obsessively and removed limiting factors (discipline, fear), your power could evolve into a Level-5-style phenomenon: a multi-vector spatial-energy dominion—capable of manipulating vectors, space curvature, and energy potential at large scales.';
+    }
+
+    // Build result HTML
+    const resDiv = document.getElementById('result');
+    const html = `
+      <h2 style="margin-top:0;margin-bottom:8px">Result — ${level === 0 ? 'No Esper' : 'Level '+level + (level === 4 || level === 5 ? ' (' + (rankText ? rankText.replace('Level '+level+' — ','') : '') + ')' : '')}</h2>
+      <div class="small">Score: ${numericSum} / ${maxPossible} (${percent}%)</div>
+      <hr style="opacity:0.06;margin:12px 0">
+      <strong>Esper Category:</strong> ${categoryLabel} <br>
+      <strong>Ability Name:</strong> ${abilityName} <br>
+      <strong>Nickname:</strong> ${nickname} <br>
+      <p style="margin-top:10px">${levelDesc}</p>
+      ${rankText ? `<p style="margin:0 0 8px 0"><strong>Rank note:</strong> ${rankText}</p>` : ''}
+      <div style="margin-top:8px;">
+        <strong>Short Description:</strong>
+        <div style="margin-top:6px;padding:10px;border-radius:8px;background:rgba(255,255,255,0.01)">
+          ${shortDesc}
+        </div>
+      </div>
+
+      <div style="margin-top:12px;">
+        <strong>Strengths</strong>
+        <ul>
+          ${strengths.length ? strengths.map(s=>'<li>'+s+'</li>').join('') : '<li>Balanced potential — no strong advantage flagged.</li>'}
+        </ul>
+        <strong>Weaknesses</strong>
+        <ul>
+          ${weaknesses.length ? weaknesses.map(s=>'<li>'+s+'</li>').join('') : '<li>Relatively few weaknesses detected — training will scale power quickly.</li>'}
+        </ul>
+      </div>
+
+      <div style="margin-top:12px;">
+        <strong>Detailed Capability (example techniques)</strong>
+        <ol>
+          ${generateTechniques(categoryLabel, abilityName).map(t=>'<li>'+t+'</li>').join('')}
+        </ol>
+      </div>
+
+      ${lvl5Evolution ? `<div style="margin-top:12px;background:linear-gradient(90deg, rgba(110,231,183,0.03), rgba(110,231,183,0.01));padding:10px;border-radius:8px"><strong>Level-5 Evolution (if trained):</strong><div class="small" style="margin-top:6px">${lvl5Evolution}</div></div>` : ''}
+
+      <div style="margin-top:12px">
+        <button id="saveBtn">Copy Result Text</button>
+        <button id="againBtn" style="margin-left:8px;background:#1f2937;color:var(--accent)">Back / Edit Answers</button>
+      </div>
+    `;
+
+    resDiv.innerHTML = html;
+    resDiv.style.display = 'block';
+    // scroll to result
+    resDiv.scrollIntoView({behavior:'smooth', block:'center'});
+
+    // copy function
+    document.getElementById('saveBtn').addEventListener('click', ()=>{
+      copyTextForClipboard(buildPlainTextExport({
+        level, percent, numericSum, maxPossible, categoryLabel, abilityName, nickname, levelDesc, rankText, shortDesc, strengths, weaknesses
+      }));
+      alert('Result copied to clipboard — paste anywhere to share.');
+    });
+    document.getElementById('againBtn').addEventListener('click', ()=>{
+      resDiv.style.display='none';
+      window.scrollTo({top:0,behavior:'smooth'});
+    });
+  } // end calculate
+
+  function generateTechniques(categoryLabel, abilityName){
+    // Return an array of example techniques depending on category
+    const list = [];
+    if(categoryLabel.includes('Energy') && categoryLabel.includes('Space')){
+      list.push('Field Fold — compress a small volume of space to push objects away with no visible projectile.');
+      list.push('Induction Sheath — create an energy layer that deflects incoming physical and energy attacks.');
+      list.push('Vector Pulse — emit a shaped electromagnetic pulse that alters local vector fields.');
+      list.push('Spatial Pinch — briefly pinch space to immobilize a single target for a second.');
+    } else if(categoryLabel.includes('Energy')){
+      list.push('Arc Discharge — focused electric attack that can overload electronics.');
+      list.push('Current Cloak — form a short-lived conductive barrier to redirect attacks.');
+      list.push('Magnetic Grip — manipulate metallic objects from range.');
+    } else if(categoryLabel.includes('Mind')){
+      list.push('Emotional Damp — dampen fear in a small area to calm allies.');
+      list.push('Memory Trace — plant a fleeting, suggestive memory to nudge decisions.');
+      list.push('Perception Shift — subtly alter sensory perception for short durations.');
+    } else if(categoryLabel.includes('Self')){
+      list.push('Burst Sprint — temporarily augment speed and reaction time.');
+      list.push('Resilience Field — boost physical durability for limited time.');
+      list.push('Adaptive Muscle — tune your body for specific tasks (strength, agility).');
+    } else if(categoryLabel.includes('Space')){
+      list.push('Micro Warp — shift position by a short distance by compressing nearby space.');
+      list.push('Dimensional Shield — create a warped bubble that deflects trajectories.');
+      list.push('Gravity Well — locally increase gravity to pin light objects.');
+    } else {
+      list.push('Unorthodox Technique — your hybrid power creates unusual effects tailored to situations.');
+      list.push('Creative Application — combine elements to produce multi-role techniques.');
+    }
+    return list;
+  }
+
+  function copyTextForClipboard(obj){
+    const lines = [];
+    lines.push('Esper Survey Result');
+    lines.push('-------------------');
+    lines.push('Level: ' + (obj.level === 0 ? 'No Esper / Level 0' : 'Level ' + obj.level));
+    lines.push('Score: ' + obj.numericSum + ' / ' + obj.maxPossible + ' (' + obj.percent + '%)');
+    lines.push('Category: ' + obj.categoryLabel);
+    lines.push('Ability Name: ' + obj.abilityName);
+    lines.push('Nickname: ' + obj.nickname);
+    lines.push('');
+    lines.push('Short Description: ' + obj.shortDesc);
+    lines.push('');
+    if(obj.level > 0){
+      lines.push('Strengths:');
+      (obj.strengths || []).forEach(s=>lines.push('- '+s));
+      lines.push('Weaknesses:');
+      (obj.weaknesses || []).forEach(s=>lines.push('- '+s));
+    }
+    navigator.clipboard && navigator.clipboard.writeText(lines.join('\\n')).catch(()=>{});
+    return lines.join('\\n');
+  }
+
+  function buildPlainTextExport(data){
+    return copyTextForClipboard(data);
+  }
+
+</script>
+</body>
+</html>
